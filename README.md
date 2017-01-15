@@ -1,4 +1,4 @@
-# Git Repo for yellow Pipeline Web-App
+# Git Repo for Yellow Pipeline Web-App
 
 This is a web-app which will utilize various 3rd party apps/scripts for extracting entity information from documents.
 
