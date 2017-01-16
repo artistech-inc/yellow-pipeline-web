@@ -30,6 +30,12 @@ cd yellow-pipeline-web
 mvn clean package
 ```
 
+## Dependencies
+
+- [camr](https://github.com/c-amr/camr)
+  - pip - for installing camr dependencies in `./scripts/config.sh`
+  - [LDC parsing model](http://www.cs.brandeis.edu/~cwang24/files/amr-anno-1.0.train.m.tar.gz)
+
 ## Deployment
 
 The output from compilation is in the `target/` directory as `yellow-pipeline-web-1.0.war`. This war can be deployed to Tomcat's `webapps` directory. Once deployed, it can be accessed via `http://<ip_address:port>/yellow-pipeline-web-1.0/`.
