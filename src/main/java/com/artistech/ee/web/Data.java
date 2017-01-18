@@ -77,6 +77,22 @@ public class Data {
         return new String[]{};
     }
 
+    public String getCamrOut() {
+        return map.get("camr");
+    }
+
+    public void setCamrOut(String value) {
+        map.put("camr", value);
+    }
+
+    public String[] getCamrFiles() {
+        if (map.containsKey("camr")) {
+            File f = new File(map.get("camr"));
+            return f.list();
+        }
+        return new String[]{};
+    }
+
     public String getData(String key) {
         return map.get(key);
     }

@@ -4,9 +4,29 @@
         <servlet-name>UploadServlet</servlet-name>
         <servlet-class>com.artistech.ee.web.UploadServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>CAMR</servlet-name>
+        <servlet-class>com.artistech.ee.web.CAMR</servlet-class>
+        <init-param>
+            <param-name>path</param-name>
+            <param-value>/home/matta/Dev/camr</param-value>
+        </init-param>
+    </servlet>
+    <servlet>
+        <servlet-name>ViewRaw</servlet-name>
+        <servlet-class>com.artistech.ee.web.ViewRaw</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>UploadServlet</servlet-name>
         <url-pattern>/UploadServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CAMR</servlet-name>
+        <url-pattern>/CAMR</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewRaw</servlet-name>
+        <url-pattern>/ViewRaw</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
