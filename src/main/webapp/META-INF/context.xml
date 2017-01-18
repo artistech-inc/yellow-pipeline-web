@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context allowCasualMultipartParsing="true" path="/yellow-pipeline-web">
-  <Parameter name="data_path" value="/work/Dev/green-pipeline-web/data"/>
+  <Parameter name="data_path" value="/work/Dev/yellow-pipeline-web/data"/>
 </Context>
