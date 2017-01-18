@@ -32,9 +32,7 @@ mvn clean package
 
 ## Dependencies
 
-- [camr](https://github.com/c-amr/camr)
-  - pip - for installing camr dependencies in `./scripts/config.sh`
-  - [LDC parsing model](http://www.cs.brandeis.edu/~cwang24/files/amr-anno-1.0.train.m.tar.gz)
+- [ArtisTech's camr yellow-pipeline fork/branch](https://github.com/artistech-inc/camr/tree/yellow-pipeline)
 
 ## Deployment
 
@@ -46,7 +44,6 @@ The output from compilation is in the `target/` directory as `yellow-pipeline-we
 
 ## TODO
 
-- Add camr
 - Add LiberalExtractor Functionality
 - Add any additiona steps
 - Output console
