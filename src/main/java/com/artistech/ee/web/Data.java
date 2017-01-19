@@ -4,8 +4,11 @@
 package com.artistech.ee.web;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.HashMap;
+import org.apache.commons.io.FileUtils;
 
 /**
  *
@@ -16,6 +19,7 @@ public class Data {
     private Calendar last_use;
     private final String key;
     private final HashMap<String, String> map = new HashMap<>();
+    private ExternalProcess proc;
 
     public Data(String key) {
         this.key = key;
@@ -93,6 +97,27 @@ public class Data {
         return new String[]{};
     }
 
+    public String getLiberalEventOut() {
+        return map.get("liberal-event");
+    }
+
+    public void setLiberalEventOut(String value) {
+        map.put("liberal-event", value);
+    }
+
+    public String[] getLiberalEventFiles() {
+        if (map.containsKey("liberal-event")) {
+            File f = new File(map.get("liberal-event"));
+            Collection<File> listFiles = FileUtils.listFiles(f, null, true);
+            ArrayList<String> ret = new ArrayList<>();
+            for (File file : listFiles) {
+                ret.add(file.getAbsolutePath());
+            }
+            return ret.toArray(new String[]{});
+        }
+        return new String[]{};
+    }
+
     public String getData(String key) {
         return map.get(key);
     }
@@ -104,5 +129,13 @@ public class Data {
 
     public String[] getKeys() {
         return map.keySet().toArray(new String[]{});
+    }
+
+    public ExternalProcess getProc() {
+        return proc;
+    }
+
+    public void setProc(ExternalProcess value) {
+        proc = value;
     }
 }

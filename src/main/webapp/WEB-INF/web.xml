@@ -16,6 +16,22 @@
         <servlet-name>ViewRaw</servlet-name>
         <servlet-class>com.artistech.ee.web.ViewRaw</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>LiberalEvent</servlet-name>
+        <servlet-class>com.artistech.ee.web.LiberalEvent</servlet-class>
+        <init-param>
+            <param-name>path</param-name>
+            <param-value>/work/Documents/FOUO/EntityExtraction/LiberalEvent</param-value>
+        </init-param>
+    </servlet>
+    <servlet>
+        <servlet-name>ProcessOutput</servlet-name>
+        <servlet-class>com.artistech.ee.web.ProcessOutput</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ProcessMonitor</servlet-name>
+        <servlet-class>com.artistech.ee.web.ProcessMonitor</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>UploadServlet</servlet-name>
         <url-pattern>/UploadServlet</url-pattern>
@@ -27,6 +43,18 @@
     <servlet-mapping>
         <servlet-name>ViewRaw</servlet-name>
         <url-pattern>/ViewRaw</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LiberalEvent</servlet-name>
+        <url-pattern>/LiberalEvent</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProcessOutput</servlet-name>
+        <url-pattern>/ProcessOutput</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProcessMonitor</servlet-name>
+        <url-pattern>/ProcessMonitor</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

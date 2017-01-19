@@ -41,6 +41,9 @@
             <c:if test="${fn:length(dataBean.data.camrFiles) eq 0}">
                 <li><a href="camr.jsp?pipeline_id=<c:out value="${dataBean.pipeline_id}" />">camr</a></li>
                 </c:if>
+            <c:if test="${fn:length(dataBean.data.camrFiles) gt 0}">
+                <li><a href="liberalEvent.jsp?pipeline_id=<c:out value="${dataBean.pipeline_id}" />">LiberalEvent</a></li>
+                </c:if>
         </ul>
         <br />
     </body>
