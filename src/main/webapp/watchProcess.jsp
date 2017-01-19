@@ -12,6 +12,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
         <title>Watch Process</title>
         <link rel='stylesheet' href='style.css' type='text/css'>
+        <script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
         <script type='text/javascript'>
             var pipeline_id = "<c:out value="${dataBean.pipeline_id}" />";
             var scroll_lock = false;
@@ -48,6 +49,9 @@
             }
 
             function init() {
+                $('#hub_link').bind('click', function (e) {
+                    e.preventDefault();
+                });
                 getProcessOutput();
                 getProcessStatus();
             }
@@ -95,8 +99,9 @@
             }
             function proc_monitor_callback(data) {
                 if (data === "false") {
+                    $('#hub_link').unbind('click');
                     proc_alive = false;
-                    printConsole("Process Complete!")
+                    printConsole("\n\n*********************\nProcess Complete!\n*********************")
                 } else {
                     setTimeout("getProcessStatus()", 250);
                 }
@@ -110,6 +115,6 @@
         <br />
         <textarea id="console" rows="50" cols="85"></textarea>
         <br />
-        <a href="hub.jsp?pipeline_id=<c:out value="${dataBean.pipeline_id}" />">HUB</a>
+        <a id="hub_link" href="hub.jsp?pipeline_id=<c:out value="${dataBean.pipeline_id}" />">HUB</a>
     </body>
 </html>
