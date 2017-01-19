@@ -23,6 +23,14 @@
             <param-name>path</param-name>
             <param-value>/work/Documents/FOUO/EntityExtraction/LiberalEvent</param-value>
         </init-param>
+        <init-param>
+            <param-name>classpath</param-name>
+            <param-value>target/liberal-event-1.0.jar:Lib/dom4j-1.6.1.jar:Lib/httpclient-4.3.1.jar:Lib/httpcore-4.3.jar:Lib/java-json.jar:Lib/junit.jar:Lib/log4j-1.2.17.jar:Lib/servlet-api-2.5.jar:Lib/SpectralClustering.jar:Lib/stanford-chinese-corenlp-2015-04-20-models.jar:Lib/stanford-corenlp-3.5.2.jar:Lib/trove-3.0.0a1.jar:Lib/urlencode-ui-1.1.jar:Lib/w3c-dom.jar:Lib/xom-1.2.6.jar:Lib/bsh-2.0b4.jar</param-value>
+        </init-param>
+        <init-param>
+            <param-name>script</param-name>
+            <param-value>liberal-parser.bsh</param-value>
+        </init-param>
     </servlet>
     <servlet>
         <servlet-name>ProcessOutput</servlet-name>
@@ -31,6 +39,10 @@
     <servlet>
         <servlet-name>ProcessMonitor</servlet-name>
         <servlet-class>com.artistech.ee.web.ProcessMonitor</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>KillProcess</servlet-name>
+        <servlet-class>com.artistech.ee.web.KillProcess</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>UploadServlet</servlet-name>
@@ -55,6 +67,10 @@
     <servlet-mapping>
         <servlet-name>ProcessMonitor</servlet-name>
         <url-pattern>/ProcessMonitor</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>KillProcess</servlet-name>
+        <url-pattern>/KillProcess</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

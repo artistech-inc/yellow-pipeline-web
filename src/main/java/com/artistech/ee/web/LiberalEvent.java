@@ -31,6 +31,8 @@ public class LiberalEvent extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String liberal_event_path = getInitParameter("path");
+        String classpath = getInitParameter("classpath");
+        String script = getInitParameter("script");
 
         Part pipeline_id_part = request.getPart("pipeline_id");
         String pipeline_id = IOUtils.toString(pipeline_id_part.getInputStream(), "UTF-8");
@@ -57,7 +59,7 @@ public class LiberalEvent extends HttpServlet {
         
         FileUtils.copyFile(new File(data.getCamrOut() + File.separator + aligned_file), new File(liberal_event_out + File.separator + "AMRParsingSystem" + File.separator + aligned_file));
 
-        ProcessBuilder pb = new ProcessBuilder("./liberal-parser.sh", liberal_event_out);
+        ProcessBuilder pb = new ProcessBuilder("java", "-Xmx10g", "-cp", classpath, "bsh.Interpreter", script, liberal_event_out);
         pb.directory(new File(liberal_event_path));
         //catch output...
         pb.redirectErrorStream(true);
