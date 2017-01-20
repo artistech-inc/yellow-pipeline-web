@@ -37,6 +37,13 @@
                     </c:forEach>
             </ul>
         </c:if>
+        <c:if test="${fn:length(dataBean.data.liberalEventFiles) gt 0}">
+            <ul>LiberalEvent Files:
+                <c:forEach var="inputFile" items="${dataBean.data.liberalEventFiles}">
+                    <li><a target="_blank" href="ViewRaw?stage=liberal-event&pipeline_id=<c:out value="${dataBean.pipeline_id}"/>&file=<c:out value="${inputFile}"/>"><c:out value="${inputFile}"/></a></li>
+                    </c:forEach>
+            </ul>
+        </c:if>
         <ul>
             <c:if test="${fn:length(dataBean.data.camrFiles) eq 0}">
                 <li><a href="camr.jsp?pipeline_id=<c:out value="${dataBean.pipeline_id}" />">camr</a></li>

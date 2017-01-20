@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import org.apache.commons.io.FileUtils;
 
@@ -111,8 +112,9 @@ public class Data {
             Collection<File> listFiles = FileUtils.listFiles(f, null, true);
             ArrayList<String> ret = new ArrayList<>();
             for (File file : listFiles) {
-                ret.add(file.getAbsolutePath());
+                ret.add(file.getAbsolutePath().replace(getLiberalEventOut() + File.separator, ""));
             }
+            Collections.sort(ret);
             return ret.toArray(new String[]{});
         }
         return new String[]{};
