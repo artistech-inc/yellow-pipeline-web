@@ -77,4 +77,7 @@
             30
         </session-timeout>
     </session-config>
+    <listener>
+        <listener-class>com.artistech.ee.web.PipelineInit</listener-class>
+    </listener>
 </web-app>

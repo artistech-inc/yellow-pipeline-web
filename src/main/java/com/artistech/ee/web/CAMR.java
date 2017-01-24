@@ -5,8 +5,6 @@ package com.artistech.ee.web;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -39,8 +37,8 @@ public class CAMR extends HttpServlet {
         Data data = DataManager.getData(pipeline_id);
         String input_directory = data.getInput();
         File f = new File(input_directory);
-        String camr_out = data.getPipelineDir() + File.separator + "camr_out";
-        data.setCamrOut(camr_out);
+        String camr_out = data.getCamrOut();
+//        data.setCamrOut(camr_out);
         File output_dir = new File(camr_out);
         FileUtils.copyDirectory(new File(input_directory), output_dir);
 //        output_dir.mkdirs();

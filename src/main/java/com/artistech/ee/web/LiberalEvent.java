@@ -37,8 +37,8 @@ public class LiberalEvent extends HttpServlet {
         Part pipeline_id_part = request.getPart("pipeline_id");
         String pipeline_id = IOUtils.toString(pipeline_id_part.getInputStream(), "UTF-8");
         Data data = DataManager.getData(pipeline_id);
-        String liberal_event_out = data.getPipelineDir() + File.separator + "liberal_event_io";
-        data.setLiberalEventOut(liberal_event_out);
+        String liberal_event_out = data.getLiberalEventOut();//data.getPipelineDir() + File.separator + "liberal_event_io";
+//        data.setLiberalEventOut(liberal_event_out);
         File output_dir = new File(liberal_event_out);
 //        FileUtils.copyDirectory(new File(input_directory), output_dir);
         output_dir.mkdirs();

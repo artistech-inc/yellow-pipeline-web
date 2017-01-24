@@ -21,37 +21,26 @@
     <body>
         <h1>Hub:</h1>
         Your pipeline_id is: <c:out value="${dataBean.pipeline_id}" />
-        <br />
-        <%--<c:out value="${fn:length(dataBean.data.inputFiles)}" />--%>
-        <c:if test="${fn:length(dataBean.data.inputFiles) gt 0}">
-            <ul>Input Files:
-                <c:forEach var="inputFile" items="${dataBean.data.inputFiles}">
-                    <li><a target="_blank" href="ViewRaw?stage=input&pipeline_id=<c:out value="${dataBean.pipeline_id}"/>&file=<c:out value="${inputFile}"/>"><c:out value="${inputFile}"/></a></li>
-                    </c:forEach>
+        <h2>Pipeline Done</h2>
+        <c:forEach var="dataDir" items="${dataBean.data.keys}">
+            <c:if test="${fn:length(dataBean.data.getFiles(dataDir)) gt 0}">
+                <ul><kbd><c:out value="${dataDir}"/></kbd> Files:
+                    <c:forEach var="dataFile" items="${dataBean.data.getFiles(dataDir)}">
+                        <li><a target="_blank" href="ViewRaw?stage=<c:out value="${dataDir}"/>&pipeline_id=<c:out value="${dataBean.pipeline_id}"/>&file=<c:out value="${dataFile}"/>"><c:out value="${dataFile}"/></a></li>
+                        </c:forEach>
+                </ul>
+            </c:if>
+        </c:forEach>
+        <c:if test="${fn:length(dataBean.data.liberalEventFiles) == 0}">
+            <h2>Pipeline To Do</h2>
+            <ul>
+                <c:if test="${fn:length(dataBean.data.camrFiles) eq 0}">
+                    <li><a href="camr.jsp?pipeline_id=<c:out value="${dataBean.pipeline_id}" />">camr</a></li>
+                    </c:if>
+                    <c:if test="${fn:length(dataBean.data.camrFiles) gt 0}">
+                    <li><a href="liberalEvent.jsp?pipeline_id=<c:out value="${dataBean.pipeline_id}" />">LiberalEvent</a></li>
+                    </c:if>
             </ul>
         </c:if>
-        <c:if test="${fn:length(dataBean.data.camrFiles) gt 0}">
-            <ul>CAMR Output Files:
-                <c:forEach var="inputFile" items="${dataBean.data.camrFiles}">
-                    <li><a target="_blank" href="ViewRaw?stage=camr&pipeline_id=<c:out value="${dataBean.pipeline_id}"/>&file=<c:out value="${inputFile}"/>"><c:out value="${inputFile}"/></a></li>
-                    </c:forEach>
-            </ul>
-        </c:if>
-        <c:if test="${fn:length(dataBean.data.liberalEventFiles) gt 0}">
-            <ul>LiberalEvent Files:
-                <c:forEach var="inputFile" items="${dataBean.data.liberalEventFiles}">
-                    <li><a target="_blank" href="ViewRaw?stage=liberal-event&pipeline_id=<c:out value="${dataBean.pipeline_id}"/>&file=<c:out value="${inputFile}"/>"><c:out value="${inputFile}"/></a></li>
-                    </c:forEach>
-            </ul>
-        </c:if>
-        <ul>
-            <c:if test="${fn:length(dataBean.data.camrFiles) eq 0}">
-                <li><a href="camr.jsp?pipeline_id=<c:out value="${dataBean.pipeline_id}" />">camr</a></li>
-                </c:if>
-            <c:if test="${fn:length(dataBean.data.camrFiles) gt 0}">
-                <li><a href="liberalEvent.jsp?pipeline_id=<c:out value="${dataBean.pipeline_id}" />">LiberalEvent</a></li>
-                </c:if>
-        </ul>
-        <br />
     </body>
 </html>
