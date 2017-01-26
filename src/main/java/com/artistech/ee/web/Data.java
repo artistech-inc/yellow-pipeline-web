@@ -91,7 +91,7 @@ public class Data {
     }
 
     public String getCamrOut() {
-        return getPipelineDir() + File.separator + LIBERAL_EVENT_DATA_DIR;
+        return getPipelineDir() + File.separator + CAMR_DATA_DIR;
     }
 
 //    public void setCamrOut(String value) {
