@@ -1,0 +1,22 @@
+name: "Yellow Pipeline Run View"
+description: |
+    The Yellow Pipeline allows a user to run CAMR and the LiberalEvent extractor.
+parts:
+    input:
+        requires: []
+        page: pipeline.jsp
+        parameters:
+            - parameter:
+                name: Text_File
+                value: ""
+                type: file
+    camr:
+        requires:
+            - input
+        page: CAMR
+        parameters: []
+    liberal-event:
+        requires:
+            - camr
+        page: LiberalEvent
+        parameters: []
