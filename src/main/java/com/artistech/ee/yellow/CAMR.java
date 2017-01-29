@@ -7,6 +7,7 @@ import com.artistech.ee.beans.Data;
 import com.artistech.ee.beans.DataManager;
 import com.artistech.utils.ExternalProcess;
 import com.artistech.utils.StreamGobbler;
+import com.artistech.utils.StreamGobblerWrapper;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -43,7 +44,7 @@ public class CAMR extends HttpServlet {
 
         Part pipeline_id_part = request.getPart("pipeline_id");
         String pipeline_id = IOUtils.toString(pipeline_id_part.getInputStream(), "UTF-8");
-        Data data = DataManager.getData(pipeline_id);
+        Data data = (Data) DataManager.getData(pipeline_id);
         String input_directory = data.getInput();
         String camr_out = data.getCamrOut();
         File output_dir = new File(camr_out);
@@ -51,12 +52,9 @@ public class CAMR extends HttpServlet {
 
         final File[] copied_input_files = output_dir.listFiles();
 
-        PipedInputStream in = new PipedInputStream();
-        final PipedOutputStream out = new PipedOutputStream(in);
-        StreamGobbler sg = new StreamGobbler(in);
+        final StreamGobblerWrapper sg = new StreamGobblerWrapper(null);
         sg.start();
 
-        final OutputStreamWriter bos = new OutputStreamWriter(out);
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -69,14 +67,12 @@ public class CAMR extends HttpServlet {
                         Process proc = pb.start();
                         StreamGobbler sg2 = new StreamGobbler(proc.getInputStream());
                         sg2.start();
-                        try {
-                            proc.waitFor();
-                        } catch (InterruptedException ex) {
-                            Logger.getLogger(CAMR.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                        bos.write(sg2.getUpdateText());
-                        bos.write(System.lineSeparator());
-                        bos.flush();
+                        sg.setWrapped(sg2);
+//                        try {
+//                            proc.waitFor();
+//                        } catch (InterruptedException ex) {
+//                            Logger.getLogger(CAMR.class.getName()).log(Level.SEVERE, null, ex);
+//                        }
                     } catch (IOException ex) {
                         Logger.getLogger(CAMR.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -87,6 +83,7 @@ public class CAMR extends HttpServlet {
         t.start();
         ExternalProcess ex_proc = new ExternalProcess(sg, t);
         data.setProc(ex_proc);
+        data.setPipelineIndex(data.getPipelineIndex() + 1);
 
         getServletContext().getRequestDispatcher("/watchProcess.jsp").forward(
                 request, response);

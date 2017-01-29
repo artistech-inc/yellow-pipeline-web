@@ -40,7 +40,7 @@ public class LiberalEvent extends HttpServlet {
 
         Part pipeline_id_part = request.getPart("pipeline_id");
         String pipeline_id = IOUtils.toString(pipeline_id_part.getInputStream(), "UTF-8");
-        Data data = DataManager.getData(pipeline_id);
+        Data data = (Data) DataManager.getData(pipeline_id);
         String liberal_event_out = data.getLiberalEventOut();//data.getPipelineDir() + File.separator + "liberal_event_io";
 //        data.setLiberalEventOut(liberal_event_out);
         File output_dir = new File(liberal_event_out);
@@ -72,6 +72,7 @@ public class LiberalEvent extends HttpServlet {
         sg.start();
         ExternalProcess ex_proc = new ExternalProcess(sg, proc);
         data.setProc(ex_proc);
+        data.setPipelineIndex(data.getPipelineIndex() + 1);
 
         // displays done.jsp page after upload finished
         getServletContext().getRequestDispatcher("/watchProcess.jsp").forward(
