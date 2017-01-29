@@ -72,7 +72,6 @@ public class LiberalEvent extends HttpServlet {
         sg.start();
         ExternalProcess ex_proc = new ExternalProcess(sg, proc);
         data.setProc(ex_proc);
-        data.setPipelineIndex(data.getPipelineIndex() + 1);
 
         // displays done.jsp page after upload finished
         getServletContext().getRequestDispatcher("/watchProcess.jsp").forward(

@@ -83,7 +83,6 @@ public class CAMR extends HttpServlet {
         t.start();
         ExternalProcess ex_proc = new ExternalProcess(sg, t);
         data.setProc(ex_proc);
-        data.setPipelineIndex(data.getPipelineIndex() + 1);
 
         getServletContext().getRequestDispatcher("/watchProcess.jsp").forward(
                 request, response);
