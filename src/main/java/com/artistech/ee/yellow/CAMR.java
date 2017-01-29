@@ -68,11 +68,11 @@ public class CAMR extends HttpServlet {
                         StreamGobbler sg2 = new StreamGobbler(proc.getInputStream());
                         sg2.start();
                         sg.setWrapped(sg2);
-//                        try {
-//                            proc.waitFor();
-//                        } catch (InterruptedException ex) {
-//                            Logger.getLogger(CAMR.class.getName()).log(Level.SEVERE, null, ex);
-//                        }
+                        try {
+                            proc.waitFor();
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(CAMR.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     } catch (IOException ex) {
                         Logger.getLogger(CAMR.class.getName()).log(Level.SEVERE, null, ex);
                     }
