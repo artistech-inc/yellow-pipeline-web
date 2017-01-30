@@ -13,7 +13,7 @@ git clone https://github.com/artistech-inc/pipeline-base.git
 cd pipeline-base
 mvn clean install
 cd ..
-git clone https://github.com/artistech-inc/yellow-pipeline-web.git
+git clone https://github.com/artistech-inc/yellow-pipeline.git
 cd yellow-pipeline-web
 git checkout v1.2
 mvn clean package
@@ -21,12 +21,12 @@ mvn clean package
 
 ## Configuration
 
-Update the [WEB-INF/web.xml](https://github.com/artistech-inc/yellow-pipeline-web/blob/master/src/main/webapp/WEB-INF/web.xml) file. Each Servlet that utilizes an external application/script/process must have the path to the application set. For now, this includes:
+Update the [WEB-INF/web.xml](https://github.com/artistech-inc/yellow-pipeline/blob/master/src/main/webapp/WEB-INF/web.xml) file. Each Servlet that utilizes an external application/script/process must have the path to the application set. For now, this includes:
 
 - camr
 - LiberalExtractor
 
-Along with the web.xml file, the [META-INF/context.xml](https://github.com/artistech-inc/yellow-pipeline-web/blob/master/src/main/webapp/META-INF/context.xml) must be configured. The `data_path` value must be somewhere that Tomcat can write to.
+Along with the web.xml file, the [META-INF/context.xml](https://github.com/artistech-inc/yellow-pipeline/blob/master/src/main/webapp/META-INF/context.xml) must be configured. The `data_path` value must be somewhere that Tomcat can write to.
 
 ## Compilation
 
