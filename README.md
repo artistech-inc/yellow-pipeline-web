@@ -2,13 +2,22 @@
 
 This is a web-app which will utilize various 3rd party apps/scripts for extracting entity information from documents.
 
-## Version 1.0
+## Version 1.2
 
-- Upload file capability
+- Shared Code with all Pipeline Projects
 
 ## Downloading
 
-`git clone https://github.com/artistech-inc/yellow-pipeline-web.git`
+```sh
+git clone https://github.com/artistech-inc/pipeline-base.git
+cd pipeline-base
+mvn clean install
+cd ..
+git clone https://github.com/artistech-inc/yellow-pipeline-web.git
+cd yellow-pipeline-web
+git checkout v1.2
+mvn clean package
+```
 
 ## Configuration
 
