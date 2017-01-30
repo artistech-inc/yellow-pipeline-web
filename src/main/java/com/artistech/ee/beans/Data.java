@@ -3,12 +3,10 @@
  */
 package com.artistech.ee.beans;
 
-import com.artistech.utils.ExternalProcess;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.logging.Level;
@@ -32,10 +30,6 @@ public class Data extends DataBase {
         return getPipelineDir() + File.separator + CAMR_DATA_DIR;
     }
 
-//    public void setCamrOut(String value) {
-//        map.put("camr", value);
-//    }
-
     public String[] getCamrFiles() {
         File dir = new File(getCamrOut());
         if (dir.exists()) {
@@ -47,10 +41,6 @@ public class Data extends DataBase {
     public String getLiberalEventOut() {
         return getPipelineDir() + File.separator + LIBERAL_EVENT_DATA_DIR;
     }
-
-//    public void setLiberalEventOut(String value) {
-//        map.put("liberal-event", value);
-//    }
 
     public String[] getLiberalEventFiles() {
         File f = new File(getLiberalEventOut());
@@ -69,7 +59,6 @@ public class Data extends DataBase {
     @Override
     public String[] getKeys() {
         ArrayList<String> keys = new ArrayList<>();
-        keys.addAll(Arrays.asList(super.getKeys()));
         Field[] fields = Data.class.getFields();
         for(Field f : fields) {
             int modifiers = f.getModifiers();
