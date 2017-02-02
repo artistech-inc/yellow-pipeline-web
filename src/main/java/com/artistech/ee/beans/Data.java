@@ -10,6 +10,7 @@ import java.util.Collections;
 import org.apache.commons.io.FileUtils;
 
 /**
+ * Data bean class for the yellow pipeline.
  *
  * @author matta
  */
@@ -18,14 +19,29 @@ public class Data extends DataBase {
     public static final String CAMR_DATA_DIR = "camr_out";
     public static final String LIBERAL_EVENT_DATA_DIR = "liberal_event_io";
 
+    /**
+     * Constructor.
+     *
+     * @param key
+     */
     public Data(String key) {
         super(key);
     }
-    
+
+    /**
+     * Get the CAMR output directory.
+     *
+     * @return
+     */
     public String getCamrOut() {
         return getPipelineDir() + File.separator + CAMR_DATA_DIR;
     }
 
+    /**
+     * Get the output files from the CAMR step.
+     *
+     * @return
+     */
     public String[] getCamrFiles() {
         File dir = new File(getCamrOut());
         if (dir.exists()) {
@@ -34,10 +50,20 @@ public class Data extends DataBase {
         return new String[]{};
     }
 
+    /**
+     * Get the liberal output directory.
+     *
+     * @return
+     */
     public String getLiberalEventOut() {
         return getPipelineDir() + File.separator + LIBERAL_EVENT_DATA_DIR;
     }
 
+    /**
+     * Get the output from the liberal event step.
+     *
+     * @return
+     */
     public String[] getLiberalEventFiles() {
         File f = new File(getLiberalEventOut());
         if (f.exists()) {

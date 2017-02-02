@@ -18,6 +18,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 /**
+ * Run the LiberalEvent step.
  *
  * @author matta
  */
@@ -49,16 +50,16 @@ public class LiberalEvent extends HttpServlet {
             File d = new File(liberal_event_out + File.separator + dir);
             d.mkdirs();
         }
-        
+
         String[] camrFiles = data.getCamrFiles();
         String aligned_file = "";
-        for(String res : camrFiles) {
+        for (String res : camrFiles) {
             if (res.endsWith(".aligned")) {
                 aligned_file = res;
                 break;
             }
         }
-        
+
         FileUtils.copyFile(new File(data.getCamrOut() + File.separator + aligned_file), new File(liberal_event_out + File.separator + "AMRParsingSystem" + File.separator + aligned_file));
 
         ProcessBuilder pb = new ProcessBuilder("java", "-Xmx10g", "-cp", classpath, "bsh.Interpreter", script, liberal_event_out);
@@ -112,7 +113,7 @@ public class LiberalEvent extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Short description";
+        return "Run LiberalEvent Step";
     }// </editor-fold>
 
 }
