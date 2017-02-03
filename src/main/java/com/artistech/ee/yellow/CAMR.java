@@ -9,7 +9,9 @@ import com.artistech.utils.ExternalProcess;
 import com.artistech.utils.StreamGobbler;
 import com.artistech.utils.StreamGobblerWrapper;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -42,7 +44,7 @@ public class CAMR extends HttpServlet {
 
         Part pipeline_id_part = request.getPart("pipeline_id");
         String pipeline_id = IOUtils.toString(pipeline_id_part.getInputStream(), "UTF-8");
-        Data data = (Data) DataManager.getData(pipeline_id);
+        final Data data = (Data) DataManager.getData(pipeline_id);
         String input_directory = data.getInput();
         String camr_out = data.getCamrOut();
         File output_dir = new File(camr_out);
@@ -63,7 +65,14 @@ public class CAMR extends HttpServlet {
                         //catch output...
                         pb.redirectErrorStream(true);
                         Process proc = pb.start();
-                        StreamGobbler sg2 = new StreamGobbler(proc.getInputStream());
+                        OutputStream os = new FileOutputStream(new File(data.getConsoleFile()), true);
+                        StreamGobbler sg2 = new StreamGobbler(proc.getInputStream(), os);
+                        sg2.write("CAMR");
+                        StringBuilder sb = new StringBuilder();
+                        for (String cmd : pb.command()) {
+                            sb.append(cmd).append(" ");
+                        }
+                        sg2.write(sb.toString().trim());
                         sg2.start();
                         sg.setWrapped(sg2);
                         try {
