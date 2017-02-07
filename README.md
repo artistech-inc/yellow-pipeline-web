@@ -2,7 +2,7 @@
 
 This is a web-app which will utilize various 3rd party apps/scripts for extracting entity information from documents.
 
-## Version 1.2
+## Version 1.3
 
 - Shared Code with all Pipeline Projects
 
@@ -15,18 +15,17 @@ mvn clean install
 cd ..
 git clone https://github.com/artistech-inc/yellow-pipeline.git
 cd yellow-pipeline-web
-git checkout v1.2
 mvn clean package
 ```
 
 ## Configuration
 
-Update the [WEB-INF/web.xml](https://github.com/artistech-inc/yellow-pipeline/blob/master/src/main/webapp/WEB-INF/web.xml) file. Each Servlet that utilizes an external application/script/process must have the path to the application set. For now, this includes:
+Update the [pipeline.yml](https://github.com/artistech-inc/yellow-pipeline-web/blob/master/src/main/resources/pipeline.yml) file.  Each component must have the proper path value set.  This is the location where the external process will execute from.
 
 - camr
 - LiberalExtractor
 
-Along with the web.xml file, the [META-INF/context.xml](https://github.com/artistech-inc/yellow-pipeline/blob/master/src/main/webapp/META-INF/context.xml) must be configured. The `data_path` value must be somewhere that Tomcat can write to.
+The `data-path` value must be somewhere that Tomcat can write to.
 
 ## Compilation
 
@@ -45,7 +44,7 @@ mvn clean package
 
 ## Deployment
 
-The output from compilation is in the `target/` directory as `yellow-pipeline-web-1.2.war`. This war can be deployed to Tomcat's `webapps` directory. Once deployed, it can be accessed via `http://<ip_address:port>/yellow-pipeline-web-1.2/`.
+The output from compilation is in the `target/` directory as `yellow-pipeline-web-1.3.war`. This war can be deployed to Tomcat's `webapps` directory. Once deployed, it can be accessed via `http://<ip_address:port>/yellow-pipeline-web-1.3/`.
 
 ## Bugs
 
