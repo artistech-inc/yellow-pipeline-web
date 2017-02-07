@@ -66,10 +66,12 @@ public class LiberalEvent extends HttpServlet {
         final String liberal_event_path = get.getParameter("path") != null ? get.getParameter("path").getValue() : getInitParameter("path");
         final String classpath = get.getParameter("classpath") != null ? get.getParameter("classpath").getValue() : getInitParameter("classpath");
         final String script = get.getParameter("script") != null ? get.getParameter("script").getValue() : getInitParameter("script");
+        final String minCluster = get.getParameter("min_cluster").getValue();// != null ? get.getParameter("script").getValue() : getInitParameter("script");
+        final String maxCluster = get.getParameter("max_cluster").getValue();// != null ? get.getParameter("script").getValue() : getInitParameter("script");
 
         FileUtils.copyFile(new File(data.getCamrOut() + File.separator + aligned_file), new File(liberal_event_out + File.separator + "AMRParsingSystem" + File.separator + aligned_file));
 
-        ProcessBuilder pb = new ProcessBuilder("java", "-Xmx10g", "-cp", classpath, "bsh.Interpreter", script, liberal_event_out);
+        ProcessBuilder pb = new ProcessBuilder("java", "-Xmx10g", "-cp", classpath, "bsh.Interpreter", script, liberal_event_out, minCluster, maxCluster);
         pb.directory(new File(liberal_event_path));
         //catch output...
         pb.redirectErrorStream(true);

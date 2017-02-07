@@ -41,4 +41,11 @@ parts:
                 name: script
                 value: liberal-parser.bsh
                 type: hidden
-
+            - parameter:
+                name: min_cluster
+                value: 10
+                type: number
+            - parameter:
+                name: max_cluster
+                value: 60
+                type: number
