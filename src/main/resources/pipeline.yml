@@ -2,11 +2,12 @@ name: "Yellow Pipeline Run View"
 description: |
     The Yellow Pipeline allows a user to run CAMR and the LiberalEvent extractor.
 data-object: com.artistech.ee.beans.Data
+data-dir: /work/Dev/yellow-pipeline-web/data
 parts:
     input:
         output-dir: input
         requires: []
-        page: pipeline.jsp
+        page: InputFile
         parameters:
             - parameter:
                 name: Text_File
@@ -17,10 +18,27 @@ parts:
         requires:
             - input
         page: CAMR
-        parameters: []
+        parameters:
+            - parameter:
+                name: path
+                value: /home/matta/Dev/camr
+                type: hidden
     liberal-event:
         output-dir: liberal_event_io
         requires:
             - camr
         page: LiberalEvent
-        parameters: []
+        parameters:
+            - parameter:
+                name: path
+                value: /work/Documents/FOUO/EntityExtraction/LiberalEvent
+                type: hidden
+            - parameter:
+                name: classpath
+                value: target/liberal-event-1.0.jar:Lib/dom4j-1.6.1.jar:Lib/httpclient-4.3.1.jar:Lib/httpcore-4.3.jar:Lib/java-json.jar:Lib/junit.jar:Lib/log4j-1.2.17.jar:Lib/servlet-api-2.5.jar:Lib/SpectralClustering.jar:Lib/stanford-chinese-corenlp-2015-04-20-models.jar:Lib/stanford-corenlp-3.5.2.jar:Lib/trove-3.0.0a1.jar:Lib/urlencode-ui-1.1.jar:Lib/w3c-dom.jar:Lib/xom-1.2.6.jar:Lib/bsh-2.0b4.jar
+                type: hidden
+            - parameter:
+                name: script
+                value: liberal-parser.bsh
+                type: hidden
+

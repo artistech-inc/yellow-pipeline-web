@@ -5,10 +5,14 @@ package com.artistech.ee.yellow;
 
 import com.artistech.ee.beans.Data;
 import com.artistech.ee.beans.DataManager;
+import com.artistech.ee.beans.PipelineBean;
 import com.artistech.utils.ExternalProcess;
 import com.artistech.utils.StreamGobbler;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +22,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 /**
+ * Run the LiberalEvent step.
  *
  * @author matta
  */
@@ -34,10 +39,6 @@ public class LiberalEvent extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String liberal_event_path = getInitParameter("path");
-        String classpath = getInitParameter("classpath");
-        String script = getInitParameter("script");
-
         Part pipeline_id_part = request.getPart("pipeline_id");
         String pipeline_id = IOUtils.toString(pipeline_id_part.getInputStream(), "UTF-8");
         Data data = (Data) DataManager.getData(pipeline_id);
@@ -49,16 +50,23 @@ public class LiberalEvent extends HttpServlet {
             File d = new File(liberal_event_out + File.separator + dir);
             d.mkdirs();
         }
-        
+
         String[] camrFiles = data.getCamrFiles();
         String aligned_file = "";
-        for(String res : camrFiles) {
+        for (String res : camrFiles) {
             if (res.endsWith(".aligned")) {
                 aligned_file = res;
                 break;
             }
         }
-        
+
+        ArrayList<PipelineBean.Part> currentParts = data.getPipelineParts();
+        PipelineBean.Part get = currentParts.get(data.getPipelineIndex());
+
+        final String liberal_event_path = get.getParameter("path") != null ? get.getParameter("path").getValue() : getInitParameter("path");
+        final String classpath = get.getParameter("classpath") != null ? get.getParameter("classpath").getValue() : getInitParameter("classpath");
+        final String script = get.getParameter("script") != null ? get.getParameter("script").getValue() : getInitParameter("script");
+
         FileUtils.copyFile(new File(data.getCamrOut() + File.separator + aligned_file), new File(liberal_event_out + File.separator + "AMRParsingSystem" + File.separator + aligned_file));
 
         ProcessBuilder pb = new ProcessBuilder("java", "-Xmx10g", "-cp", classpath, "bsh.Interpreter", script, liberal_event_out);
@@ -66,7 +74,14 @@ public class LiberalEvent extends HttpServlet {
         //catch output...
         pb.redirectErrorStream(true);
         Process proc = pb.start();
-        StreamGobbler sg = new StreamGobbler(proc.getInputStream());
+        OutputStream os = new FileOutputStream(new File(data.getConsoleFile()), true);
+        StreamGobbler sg = new StreamGobbler(proc.getInputStream(), os);
+        sg.write("LiberalEvent");
+        StringBuilder sb = new StringBuilder();
+        for (String cmd : pb.command()) {
+            sb.append(cmd).append(" ");
+        }
+        sg.write(sb.toString().trim());
         sg.start();
         ExternalProcess ex_proc = new ExternalProcess(sg, proc);
         data.setProc(ex_proc);
@@ -112,7 +127,7 @@ public class LiberalEvent extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Short description";
+        return "Run LiberalEvent Step";
     }// </editor-fold>
 
 }
