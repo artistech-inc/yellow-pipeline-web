@@ -1,8 +1,12 @@
 /*
  * Copyright 2017 ArtisTech, Inc.
  */
-package com.artistech.ee.web;
+package com.artistech.ee.yellow;
 
+import com.artistech.ee.beans.Data;
+import com.artistech.ee.beans.DataManager;
+import com.artistech.utils.ExternalProcess;
+import com.artistech.utils.StreamGobbler;
 import java.io.File;
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -17,7 +21,7 @@ import org.apache.commons.io.IOUtils;
  *
  * @author matta
  */
-public class CAMR extends HttpServlet {
+public class LiberalEvent extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -30,40 +34,42 @@ public class CAMR extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String camr_path = getInitParameter("path");
+        String liberal_event_path = getInitParameter("path");
+        String classpath = getInitParameter("classpath");
+        String script = getInitParameter("script");
 
         Part pipeline_id_part = request.getPart("pipeline_id");
         String pipeline_id = IOUtils.toString(pipeline_id_part.getInputStream(), "UTF-8");
-        Data data = DataManager.getData(pipeline_id);
-        String input_directory = data.getInput();
-        File f = new File(input_directory);
-        String camr_out = data.getCamrOut();
-//        data.setCamrOut(camr_out);
-        File output_dir = new File(camr_out);
-        FileUtils.copyDirectory(new File(input_directory), output_dir);
-//        output_dir.mkdirs();
-
-        File[] copied_input_files = output_dir.listFiles();
-        for (File txt : copied_input_files) {
-            //TODO: need to know "$FILE_LIST", "$INPUT_SGM", "$ENIE_OUTP"
-            ProcessBuilder pb = new ProcessBuilder("./camr-pipeline.sh", txt.getAbsolutePath());
-            pb.directory(new File(camr_path));
-            //catch output...
-            pb.redirectErrorStream(true);
-            Process proc = pb.start();
-            StreamGobbler sg = new StreamGobbler(proc.getInputStream());
-            sg.start();
-            ExternalProcess ex_proc = new ExternalProcess(sg, proc);
-            data.setProc(ex_proc);
-//            try {
-//                proc.waitFor();
-//            } catch (InterruptedException ex) {
-//                Logger.getLogger(CAMR.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-
+        Data data = (Data) DataManager.getData(pipeline_id);
+        String liberal_event_out = data.getLiberalEventOut();
+        File output_dir = new File(liberal_event_out);
+        output_dir.mkdirs();
+        String[] dirs = new String[]{"AMRNodeEdge", "AMRNodeEdgeSystem", "AMRParsingHuman", "AMRParsingSystem", "Cluster"};
+        for (String dir : dirs) {
+            File d = new File(liberal_event_out + File.separator + dir);
+            d.mkdirs();
         }
-//        Part part = request.getPart("step");
-//        String target = IOUtils.toString(part.getInputStream(), "UTF-8");
+        
+        String[] camrFiles = data.getCamrFiles();
+        String aligned_file = "";
+        for(String res : camrFiles) {
+            if (res.endsWith(".aligned")) {
+                aligned_file = res;
+                break;
+            }
+        }
+        
+        FileUtils.copyFile(new File(data.getCamrOut() + File.separator + aligned_file), new File(liberal_event_out + File.separator + "AMRParsingSystem" + File.separator + aligned_file));
+
+        ProcessBuilder pb = new ProcessBuilder("java", "-Xmx10g", "-cp", classpath, "bsh.Interpreter", script, liberal_event_out);
+        pb.directory(new File(liberal_event_path));
+        //catch output...
+        pb.redirectErrorStream(true);
+        Process proc = pb.start();
+        StreamGobbler sg = new StreamGobbler(proc.getInputStream());
+        sg.start();
+        ExternalProcess ex_proc = new ExternalProcess(sg, proc);
+        data.setProc(ex_proc);
 
         // displays done.jsp page after upload finished
         getServletContext().getRequestDispatcher("/watchProcess.jsp").forward(

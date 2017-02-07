@@ -1,10 +1,17 @@
 /*
  * Copyright 2017 ArtisTech, Inc.
  */
-package com.artistech.ee.web;
+package com.artistech.ee.yellow;
 
+import com.artistech.ee.beans.Data;
+import com.artistech.ee.beans.DataManager;
+import com.artistech.utils.ExternalProcess;
+import com.artistech.utils.StreamGobbler;
+import com.artistech.utils.StreamGobblerWrapper;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +24,7 @@ import org.apache.commons.io.IOUtils;
  *
  * @author matta
  */
-public class LiberalEvent extends HttpServlet {
+public class CAMR extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -30,46 +37,50 @@ public class LiberalEvent extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String liberal_event_path = getInitParameter("path");
-        String classpath = getInitParameter("classpath");
-        String script = getInitParameter("script");
+        final String camr_path = getInitParameter("path");
 
         Part pipeline_id_part = request.getPart("pipeline_id");
         String pipeline_id = IOUtils.toString(pipeline_id_part.getInputStream(), "UTF-8");
-        Data data = DataManager.getData(pipeline_id);
-        String liberal_event_out = data.getLiberalEventOut();//data.getPipelineDir() + File.separator + "liberal_event_io";
-//        data.setLiberalEventOut(liberal_event_out);
-        File output_dir = new File(liberal_event_out);
-//        FileUtils.copyDirectory(new File(input_directory), output_dir);
-        output_dir.mkdirs();
-        String[] dirs = new String[]{"AMRNodeEdge", "AMRNodeEdgeSystem", "AMRParsingHuman", "AMRParsingSystem", "Cluster"};
-        for (String dir : dirs) {
-            File d = new File(liberal_event_out + File.separator + dir);
-            d.mkdirs();
-        }
-        
-        String[] camrFiles = data.getCamrFiles();
-        String aligned_file = "";
-        for(String res : camrFiles) {
-            if (res.endsWith(".aligned")) {
-                aligned_file = res;
-                break;
-            }
-        }
-        
-        FileUtils.copyFile(new File(data.getCamrOut() + File.separator + aligned_file), new File(liberal_event_out + File.separator + "AMRParsingSystem" + File.separator + aligned_file));
+        Data data = (Data) DataManager.getData(pipeline_id);
+        String input_directory = data.getInput();
+        String camr_out = data.getCamrOut();
+        File output_dir = new File(camr_out);
+        FileUtils.copyDirectory(new File(input_directory), output_dir);
 
-        ProcessBuilder pb = new ProcessBuilder("java", "-Xmx10g", "-cp", classpath, "bsh.Interpreter", script, liberal_event_out);
-        pb.directory(new File(liberal_event_path));
-        //catch output...
-        pb.redirectErrorStream(true);
-        Process proc = pb.start();
-        StreamGobbler sg = new StreamGobbler(proc.getInputStream());
+        final File[] copied_input_files = output_dir.listFiles();
+
+        final StreamGobblerWrapper sg = new StreamGobblerWrapper(null);
         sg.start();
-        ExternalProcess ex_proc = new ExternalProcess(sg, proc);
+
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (File txt : copied_input_files) {
+                    try {
+                        ProcessBuilder pb = new ProcessBuilder("./camr-pipeline.sh", txt.getAbsolutePath());
+                        pb.directory(new File(camr_path));
+                        //catch output...
+                        pb.redirectErrorStream(true);
+                        Process proc = pb.start();
+                        StreamGobbler sg2 = new StreamGobbler(proc.getInputStream());
+                        sg2.start();
+                        sg.setWrapped(sg2);
+                        try {
+                            proc.waitFor();
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(CAMR.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    } catch (IOException ex) {
+                        Logger.getLogger(CAMR.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                }
+            }
+        });
+        t.start();
+        ExternalProcess ex_proc = new ExternalProcess(sg, t);
         data.setProc(ex_proc);
 
-        // displays done.jsp page after upload finished
         getServletContext().getRequestDispatcher("/watchProcess.jsp").forward(
                 request, response);
     }

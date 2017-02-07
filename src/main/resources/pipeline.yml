@@ -1,0 +1,26 @@
+name: "Yellow Pipeline Run View"
+description: |
+    The Yellow Pipeline allows a user to run CAMR and the LiberalEvent extractor.
+data-object: com.artistech.ee.beans.Data
+parts:
+    input:
+        output-dir: input
+        requires: []
+        page: pipeline.jsp
+        parameters:
+            - parameter:
+                name: Text_File
+                value: ""
+                type: file
+    camr:
+        output-dir: camr_out
+        requires:
+            - input
+        page: CAMR
+        parameters: []
+    liberal-event:
+        output-dir: liberal_event_io
+        requires:
+            - camr
+        page: LiberalEvent
+        parameters: []
